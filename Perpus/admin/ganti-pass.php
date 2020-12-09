@@ -1,10 +1,12 @@
 <?php
 session_start();
 error_reporting(0);
-include('includes/config.php');?>
+include('includes/config.php');
+?>
 
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -66,14 +68,24 @@ include('includes/config.php');?>
                         <span class="nav__name">Dashboard</span>
                     </a>
 
-                    <a href="peminjaman.php" class="nav__link">
+                    <a href="manajemen-kategori.php" class="nav__link">
+                        <i class='bx bxs-folder nav__icon'></i>
+                        <span class="nav__name">Kategori</span>
+                    </a>
+
+                    <a href="manajemen-buku.php" class="nav__link">
+                        <i class='bx bxs-book-alt nav__icon'></i>
+                        <span class="nav__name">Buku</span>
+                    </a>
+
+                    <a href="manajemen-peminjaman.php" class="nav__link">
                         <i class='bx bxs-cart-add nav__icon'></i>
                         <span class="nav__name">Peminjaman</span>
                     </a>
 
-                    <a href="profil.php" class="nav__link">
+                    <a href="anggota.php" class="nav__link">
                         <i class='bx bxs-user nav__icon'></i>
-                        <span class="nav__name">Profil</span>
+                        <span class="nav__name">Anggota</span>
                     </a>
 
                     <a href="ganti-pass.php" class="nav__link active">

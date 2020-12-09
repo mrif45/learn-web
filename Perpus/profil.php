@@ -1,7 +1,8 @@
 <?php
 session_start();
 error_reporting(0);
-include('includes/config.php'); ?>
+include('includes/config.php');
+?>
 
 <!DOCTYPE html>
 <html lang="en">
@@ -29,7 +30,7 @@ include('includes/config.php'); ?>
         </div>
 
         <div class="header__img">
-            <img src="assets/Img/profile.png" alt="">
+            <img href="profil.php" src="assets/Img/profile.png" alt="">
         </div>
     </header>
 
@@ -70,6 +71,7 @@ include('includes/config.php'); ?>
             </a>
         </nav>
     </div>
+
     <div class="content-wrapper">
         <div class="container">
             <div class="row pad-botm">
@@ -86,16 +88,15 @@ include('includes/config.php'); ?>
                         <div class="panel-body">
                             <form name="signup" method="post">
                                 <?php
-                                $sid = $_SESSION['stdid'];
-                                $sql = "SELECT id_siswa,nama_siswa,email_siswa,no_telp,tgl_reg,tgl_update,status from  siswa  where id_siswa=:sid ";
+                                // $sid = $_SESSION['stdid'];
+                                $sql = "SELECT id_siswa,nama_siswa,email_siswa,no_telp,tgl_reg,tgl_update,status from  siswa";
                                 $query = $dbh->prepare($sql);
-                                $query->bindParam(':sid', $sid, PDO::PARAM_STR);
+                                // $query->bindParam(':sid', $sid, PDO::PARAM_STR);
                                 $query->execute();
                                 $results = $query->fetchAll(PDO::FETCH_OBJ);
                                 $cnt = 1;
                                 if ($query->rowCount() > 0) {
                                     foreach ($results as $result) {               ?>
-
                                         <div class="form-group">
                                             <label>ID Siswa: </label>
                                             <?php echo htmlentities($result->id_siswa); ?>
@@ -115,23 +116,21 @@ include('includes/config.php'); ?>
 
                                         <div class="form-group">
                                             <label>Status : </label>
-                                            <?php if ($result->Status == 1) { ?>
+                                            <?php if ($result->status == 1) { ?>
                                                 <span style="color: green">Aktif</span>
                                             <?php } else { ?>
                                                 <span style="color: red">Blok</span>
                                             <?php } ?>
                                         </div>
 
-
                                         <div class="form-group">
                                             <label>Masukan Nama</label>
                                             <input class="form-control" type="text" name="fullanme" value="<?php echo htmlentities($result->nama_siswa); ?>" autocomplete="off" required />
                                         </div>
 
-
                                         <div class="form-group">
                                             <label>Nomor Telepon</label>
-                                            <input class="form-control" type="text" name="mobileno" maxlength="10" value="<?php echo htmlentities($result->no_telp); ?>" autocomplete="off" required />
+                                            <input class="form-control" type="text" name="notelp" maxlength="10" value="<?php echo htmlentities($result->no_telp); ?>" autocomplete="off" required />
                                         </div>
 
                                         <div class="form-group">
@@ -141,7 +140,7 @@ include('includes/config.php'); ?>
                                 <?php }
                                 } ?>
 
-                                <button type="submit" name="update" class="btn btn-primary" id="submit">Update</button>
+                                <button type="submit" name="update" class="btn btn-primary" id="submit">Pebarui</button>
 
                             </form>
                         </div>

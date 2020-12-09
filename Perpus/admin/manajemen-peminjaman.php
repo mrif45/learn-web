@@ -1,11 +1,10 @@
 <?php
 session_start();
 error_reporting(0);
-include('includes/config.php');
-?>
-
+include('includes/config.php'); ?>
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -19,7 +18,7 @@ include('includes/config.php');
     <!-- CSS -->
     <link rel="stylesheet" href="assets/css/styles.css">
 
-    <title>Perpustakaan | Peminjaman</title>
+    <title>Perpustakaan</title>
 </head>
 
 <body id="body-pd">
@@ -47,14 +46,24 @@ include('includes/config.php');
                         <span class="nav__name">Dashboard</span>
                     </a>
 
-                    <a href="peminjaman.php" class="nav__link active">
+                    <a href="manajemen-kategori.php" class="nav__link">
+                        <i class='bx bxs-folder nav__icon'></i>
+                        <span class="nav__name">Kategori</span>
+                    </a>
+
+                    <a href="manajemen-buku.php" class="nav__link">
+                        <i class='bx bxs-book-alt nav__icon'></i>
+                        <span class="nav__name">Buku</span>
+                    </a>
+
+                    <a href="manajemen-peminjaman.php" class="nav__link active">
                         <i class='bx bxs-cart-add nav__icon'></i>
                         <span class="nav__name">Peminjaman</span>
                     </a>
 
-                    <a href="profil.php" class="nav__link">
+                    <a href="anggota.php" class="nav__link">
                         <i class='bx bxs-user nav__icon'></i>
-                        <span class="nav__name">Profil</span>
+                        <span class="nav__name">Anggota</span>
                     </a>
 
                     <a href="ganti-pass.php" class="nav__link">
@@ -71,36 +80,69 @@ include('includes/config.php');
         </nav>
     </div>
 
-    <div class="container">
-        <div class="row pad-botm">
-            <div class="col-md-12">
-                <h4 class="header-line">Peminjaman</h4>
+    <div class="content-wrapper">
+        <div class="container">
+            <div class="row pad-botm">
+                <div class="col-md-12">
+                    <h4 class="header-line">Manajemen Peminjaman</h4>
+                </div>
+                <div class="row">
+                    <?php if ($_SESSION['error'] != "") { ?>
+                        <div class="col-md-6">
+                            <div class="alert alert-danger">
+                                <strong>Error :</strong>
+                                <?php echo htmlentities($_SESSION['error']); ?>
+                                <?php echo htmlentities($_SESSION['error'] = ""); ?>
+                            </div>
+                        </div>
+                    <?php } ?>
+                    <?php if ($_SESSION['msg'] != "") { ?>
+                        <div class="col-md-6">
+                            <div class="alert alert-success">
+                                <strong>Sukses :</strong>
+                                <?php echo htmlentities($_SESSION['msg']); ?>
+                                <?php echo htmlentities($_SESSION['msg'] = ""); ?>
+                            </div>
+                        </div>
+                    <?php } ?>
+                    <?php if ($_SESSION['delmsg'] != "") { ?>
+                        <div class="col-md-6">
+                            <div class="alert alert-success">
+                                <strong>Sukses :</strong>
+                                <?php echo htmlentities($_SESSION['delmsg']); ?>
+                                <?php echo htmlentities($_SESSION['delmsg'] = ""); ?>
+                            </div>
+                        </div>
+                    <?php } ?>
+
+                </div>
+
+
             </div>
             <div class="row">
                 <div class="col-md-12">
+                    <!-- Advanced Tables -->
                     <div class="panel panel-default">
                         <div class="panel-heading">
-                            <h5 class="panel-title">Buku yang dipinjam</h5>
+                            Peminjaman
                         </div>
                         <div class="panel-body">
                             <div class="table-responsive">
                                 <table class="table table-striped table-bordered table-hover" id="dataTables-example">
                                     <thead>
                                         <tr>
-                                            <th>No</th>
-                                            <th>Nama Buku</th>
+                                            <th>No.</th>
+                                            <th>Nama Siswa</th>
+                                            <th>Buku</th>
                                             <th>ISBN </th>
-                                            <th>Tanggal Pinjam</th>
+                                            <th>Tanggal Peminjaman</th>
                                             <th>Tanggal Kembali</th>
-                                            <th>Denda</th>
+                                            <th>Aksi</th>
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        <?php
-                                        // $sid = $_SESSION['stdid'];
-                                        $sql = "SELECT buku.nama_buku, buku.ISBN, peminjaman.tgl_pinjam ,peminjaman.tgl_kembali, peminjaman.id as rid, peminjaman.denda from peminjaman join siswa on siswa.id_siswa=peminjaman.id_siswa join buku on buku.id_buku=peminjaman.id_buku  order by peminjaman.id desc";
+                                        <?php $sql = "SELECT siswa.nama_siswa, buku.nama_buku, buku.ISBN, peminjaman.tgl_pinjam, peminjaman.tgl_kembali, peminjaman.id as rid from peminjaman join siswa on siswa.id_siswa = peminjaman.id_siswa join buku on buku.id_buku=peminjaman.id_buku order by peminjaman.id desc";
                                         $query = $dbh->prepare($sql);
-                                        // $query->bindParam(':sid', $sid, PDO::PARAM_STR);
                                         $query->execute();
                                         $results = $query->fetchAll(PDO::FETCH_OBJ);
                                         $cnt = 1;
@@ -108,19 +150,20 @@ include('includes/config.php');
                                             foreach ($results as $result) { ?>
                                                 <tr class="odd gradeX">
                                                     <td class="center"><?php echo htmlentities($cnt); ?></td>
+                                                    <td class="center"><?php echo htmlentities($result->nama_siswa); ?></td>
                                                     <td class="center"><?php echo htmlentities($result->nama_buku); ?></td>
                                                     <td class="center"><?php echo htmlentities($result->ISBN); ?></td>
                                                     <td class="center"><?php echo htmlentities($result->tgl_pinjam); ?></td>
+                                                    <td class="center"><?php if ($result->tgl_kembali == "") {
+                                                                            echo htmlentities("Belum Dikembalikan");
+                                                                        } else {
+                                                                            echo htmlentities($result->tgl_kembali);
+                                                                        }
+                                                                        ?></td>
                                                     <td class="center">
-                                                        <?php if ($result->tgl_kembali == "") { ?>
-                                                            <span style="color:red">
-                                                                <?php echo htmlentities("Belum dikembalikan"); ?>
-                                                            </span>
-                                                        <?php } else {
-                                                            echo htmlentities($result->tgl_kembali);
-                                                        } ?>
+
+                                                        <a href="update-issue-bookdeails.php?rid=<?php echo htmlentities($result->rid); ?>"><button class="btn btn-primary"><i class='bx bxs-pencil nav__icon__lite'></i> Edit</button>
                                                     </td>
-                                                    <td class="center"><?php echo htmlentities($result->denda); ?></td>
                                                 </tr>
                                         <?php $cnt = $cnt + 1;
                                             }
@@ -128,6 +171,7 @@ include('includes/config.php');
                                     </tbody>
                                 </table>
                             </div>
+
                         </div>
                     </div>
                     <!--End Advanced Tables -->
@@ -135,12 +179,7 @@ include('includes/config.php');
             </div>
         </div>
     </div>
-    </div>
-
     <?php include('includes/script.php'); ?>
-    <!-- DATATABLE SCRIPTS  -->
-    <!-- <script src="assets/js/dataTables/jquery.dataTables.js"></script>
-    <script src="assets/js/dataTables/dataTables.bootstrap.js"></script> -->
 </body>
 
 </html>

@@ -1,3 +1,101 @@
+<?php
+session_start();
+error_reporting(0);
+include('includes/config.php');
+
+if (isset($_POST['login'])) {
+        $email = $_POST['email_siswa'];
+        $password = $_POST['password'];
+        $sql = "SELECT email_siswa, password FROM siswa WHERE email_siswa=:email and password=:password";
+        $query = $dbh->prepare($sql);
+        $query->bindParam(':email', $email, PDO::PARAM_STR);
+        $query->bindParam(':password', $password, PDO::PARAM_STR);
+        $query->execute();
+        $results = $query->fetchAll(PDO::FETCH_OBJ);
+        if ($query->rowCount() > 0) {
+            echo "<script type='text/javascript'> document.location ='dashboard.php'; </script>";
+        } else {
+            echo "<script>alert('Silahkan Coba lagi');</script>";
+        }
+
+        // if ($query->rowCount() > 0) {
+        //     foreach ($results as $result) {
+        //         $_SESSION['stdid'] = $result->id_siswa;
+        //         if ($result->Status == 1) {
+        //             $_SESSION['login'] = $_POST['email_siswa'];
+        //             echo "<script type='text/javascript'>
+        //             document.location = 'dashboard.php';
+        //             </script>";
+        //         } else {
+        //             echo "<script>
+        //             alert('Data tidak benar');
+        //             </script>";
+        //         }
+        //     }
+        // }
+}
+
+if (isset($_POST['signup'])) {
+    //code for captach verification
+    if ($_POST["vercode"] != $_SESSION["vercode"] or $_SESSION["vercode"] == '') {
+        echo "<script>alert('Kode Salah, Coba Lagi');</script>";
+    } else {
+    //ID Siswa
+    $hitung_siswa = ("includes/id_siswa.txt");
+    $hits = file($hitung_siswa);
+    $hits[0]++;
+    $fp = fopen($hitung_siswa, "w");
+    fputs($fp, "$hits[0]");
+    fclose($fp);
+
+    $id_siswa = $hits[0];
+    $name = $_POST['nama'];
+    $email = $_POST['email'];
+    $password = $_POST['password'];
+    $notelp = $_POST['notel'];
+    $status = 1;
+    $sql = "INSERT INTO siswa(nama_siswa, email_siswa, password, no_telp, status) VALUES(:name, :email, :password, :notelp, :status)";
+    $query = $dbh->prepare($sql);
+
+    $query->bindParam(':name', $name, PDO::PARAM_STR);
+    $query->bindParam(':notelp', $notelp, PDO::PARAM_STR);
+    $query->bindParam(':email', $email, PDO::PARAM_STR);
+    $query->bindParam(':password', $password, PDO::PARAM_STR);
+    $query->bindParam(':status', $status, PDO::PARAM_STR);
+    $query->execute();
+
+    $lastInsertId = $dbh->lastInsertId();
+    if ($lastInsertId) {
+        echo '<script>alert("Registrasi Sukses, berikut ID anda  "+"' . $id_siswa . '")</script>';
+    } else {
+        echo "<script>alert('Ada yang salah. Coba Lagi');</script>";
+    }
+    }
+}
+
+if (isset($_POST['adminlogin'])) {
+    //code for captach verification
+    if ($_POST["vercode"] != $_SESSION["vercode"] or $_SESSION["vercode"] == '') {
+        echo "<script>alert('Incorrect verification code');</script>";
+    } else {
+        $username = $_POST['username'];
+        $password = $_POST['password'];
+        $sql = "SELECT username,password FROM admin WHERE username=:username and password=:password";
+        $query = $dbh->prepare($sql);
+        $query->bindParam(':username', $username, PDO::PARAM_STR);
+        $query->bindParam(':password', $password, PDO::PARAM_STR);
+        $query->execute();
+        $results = $query->fetchAll(PDO::FETCH_OBJ);
+        if ($query->rowCount() > 0) {
+            $_SESSION['alogin'] = $_POST['username'];
+            echo "<script type='text/javascript'> document.location ='admin/dashboard.php'; </script>";
+        } else {
+            echo "<script>alert('Silahkan Coba lagi');</script>";
+        }
+    }
+}
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -22,12 +120,12 @@
             </div>
 
             <div class="login__forms">
-                <form name="signin" role="form" method="POST" class="login__registre" id="login-in">
+                <form name="signin" method="post" class="login__registre" id="login-in">
                     <h1 class="login__title">Masuk</h1>
 
                     <div class="login__box">
                         <i class='bx bx-user login__icon'></i>
-                        <input type="text" placeholder="Masukan Email Anda" name="emailid" required autocomplete="off" class="login__input">
+                        <input type="text" placeholder="Masukan Email Anda" name="email_siswa" required autocomplete="off" class="login__input">
                     </div>
 
                     <div class="login__box">
@@ -36,56 +134,62 @@
                     </div>
 
                     <a href="#" class="login__forgot">Lupa password?</a>
-
-                    <a href="dashboard.php" class="login__button" type="submit" name="login">Sign In</a>
+                    <button href="dashboard.php" class="login__button" type="submit" name="login">Masuk</button>
 
                     <div>
                         <span class="login__account">Belum punya akun?</span>
-                        <span class="login__signin" id="sign-up">Sign Up</span>
+                        <span class="login__signup" id="sign-up">Sign Up</span>
                     </div>
-                    <!-- <div>
+
+                    <div>
                         <span class="login__account">Apakah anda Admin?</span>
                         <span class="login__signin" id="admin">Admin Login</span>
-                    </div> -->
+                    </div>
                 </form>
 
-                <form name="signup" method="post" onSubmit="return valid();" class="login__create none" id="login-up">
+                <form name="signup" method="post" class="login__create none" id="login-up">
                     <h1 class="login__title">Buat Akun</h1>
 
                     <div class="login__box">
                         <i class='bx bx-user login__icon'></i>
-                        <input type="text" placeholder="Masukan Nama" autocomplete="off" required class="login__input">
+                        <input name="nama" type="text" placeholder="Masukan Nama" autocomplete="off" required class="login__input">
                     </div>
 
                     <div class="login__box">
                         <i class='bx bx-at login__icon'></i>
-                        <input type="text" placeholder="Email" name="email" onBlur="checkAvailability()" autocomplete="off" required class="login__input">
+                        <input name="email" type="text" placeholder="Email" autocomplete="off" required class="login__input">
                     </div>
 
                     <div class="login__box">
                         <i class='bx bx-phone-call login__icon'></i>
-                        <input type="text" placeholder="Nomor Telepon" maxlength="11" autocomplete="off" required class="login__input">
+                        <input name="notel" type="text" placeholder="Nomor Telepon" maxlength="11" autocomplete="off" required class="login__input">
                     </div>
 
                     <div class="login__box">
                         <i class='bx bx-lock-alt login__icon'></i>
-                        <input type="password" placeholder="Password" autocomplete="off" required class="login__input">
+                        <input name="password" type="password" placeholder="Password" autocomplete="off" required class="login__input">
                     </div>
 
-                    <a href="index.php" class="login__button">Sign Up</a>
+                    <div class="login__box">
+                        <i class='bx bx-check-shield login__icon'></i>
+                        <input type="text" name="vercode" placeholder="Kode Verifikasi" maxlength="5" autocomplete="off" required class="login__input" />
+                        <img src="captcha.php">
+                    </div>
+
+                    <button name="signup" type="submit" href="index.php" class="login__button">Daftar</button>
 
                     <div>
                         <span class="login__account">Sudah punya akun ?</span>
-                        <span class="login__signup" id="sign-in">Sign In</span>
+                        <span class="login__signin" id="sign-in">Sign In</span>
                     </div>
                 </form>
 
-                <!-- <form name="admin" role="form" method="POST" class="login__registre" id="admin-login">
+                <form name="adminlogin" method="post" class="login__registre none" id="admin-login">
                     <h1 class="login__title">Admin</h1>
 
                     <div class="login__box">
                         <i class='bx bx-user login__icon'></i>
-                        <input type="text" placeholder="Masukan Username Anda" name="username" required autocomplete="off" class="login__input">
+                        <input type="text" placeholder="Masukan Username" name="username" required autocomplete="off" class="login__input">
                     </div>
 
                     <div class="login__box">
@@ -93,19 +197,25 @@
                         <input type="password" placeholder="Password" name="password" required autocomplete="off" class="login__input">
                     </div>
 
-                    <a href="admin/dashboard.php" class="login__button" type="submit" name="login">Masuk</a>
-
-                    <div>
-                        <span class="login__account">Bukan admin?</span>
-                        <span class="login__signup" id="sign-in">Sign In</span>
+                    <div class="login__box">
+                        <i class='bx bx-check-shield login__icon'></i>
+                        <input type="text" name="vercode" placeholder="Kode Verifikasi" maxlength="5" autocomplete="off" required class="login__input" />
+                        <img src="captcha.php">
                     </div>
-                </form> -->
+
+                    <button href="admin/dashboard.php" class="login__button" type="submit" name="adminlogin">Masuk</button>
+
+                    <!-- <div>
+                        <span class="login__account">Bukan admin?</span>
+                        <span class="login__signin" id="sign-in">Sign In</span>
+                    </div> -->
+                </form>
             </div>
         </div>
     </div>
 
     <!--===== MAIN JS =====-->
-    <script src="assets/js/main.js"></script>
+    <?php include('includes/script.php'); ?>
 </body>
 
 </html>

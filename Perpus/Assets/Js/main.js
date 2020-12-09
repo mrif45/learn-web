@@ -45,29 +45,23 @@ const signUp = document.getElementById('sign-up'),
 signUp.addEventListener('click', ()=>{
     loginIn.classList.remove('block')
     loginUp.classList.remove('none')
-    admin.classList.remove('block')
 
     loginIn.classList.toggle('none')
     loginUp.classList.toggle('block')
-    admin.classList.toggle('none')
 })
 
 signIn.addEventListener('click', ()=>{
     loginIn.classList.remove('none')
     loginUp.classList.remove('block')
-    admin.classList.remove('block')
 
     loginIn.classList.toggle('block')
-    loginUp.classList.toggle('none')
-    admin.classList.toggle('none')
+    loginUp.classList.toggle('none')    
 })
 
-adminLogin.addEventListener('click', ()=>{
+admin.addEventListener('click', ()=>{
     loginIn.classList.remove('block')
-    loginUp.classList.remove('block')
-    admin.classList.remove('none')
+    adminLogin.classList.remove('none')
 
     loginIn.classList.toggle('none')
-    loginUp.classList.toggle('none')
-    admin.classList.toggle('block')
+    adminLogin.classList.toggle('block')
 })

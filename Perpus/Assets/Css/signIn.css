@@ -12,8 +12,8 @@
   /*===== Font and typography =====*/
   --body-font: 'Open Sans', sans-serif;
   --h1-font-size: 1.5rem;
-  --normal-font-size: .938rem;
-  --small-font-size: .813rem;
+  --normal-font-size: .900rem;
+  --small-font-size: .800rem;
 }
 
 @media screen and (min-width: 768px){
@@ -44,10 +44,16 @@ a{
   text-decoration: none;
 }
 
+button {
+  border: none;
+  margin: 32px;
+  display: inline;
+}
+
 img{
   max-width: 100%;
   height: auto;
-  display: block;
+  display: inline;
 }
 
 /*===== LOGIN =====*/
@@ -79,18 +85,18 @@ img{
 
 .login__registre, .login__create{
   position: absolute;
-  bottom: 1rem;
+  bottom: 0.5rem;
   width: 100%;
   background-color: var(--first-color-lighten);
-  padding: 2rem 1rem;
+  padding: 1rem 1rem;
   border-radius: 1rem;
   text-align: center;
   box-shadow: 0 8px 20px rgba(35,0,77,.2);
-  /* animation-duration: .4s; */
-  /* animation-name: animate-login; */
+  animation-duration: .4s; 
+  animation-name: animate-login;
 }
 
-/* @keyframes animate-login{
+@keyframes animate-login{
   0%{
     transform: scale(1,1);
   }
@@ -100,21 +106,25 @@ img{
   100%{
     transform: scale(1,1);
   }
-} */
+}
 
 .login__title{
   font-size: var(--h1-font-size);
-  margin-bottom: 2rem;
+  margin-bottom: 1rem;
 }
 
 .login__box{
   display: grid;
-  grid-template-columns: max-content 1fr;
+  grid-template-columns: max-content 200px 50px;
   column-gap: .5rem;
   padding: 1.125rem 1rem;
   background-color: #FFF;
   margin-top: 1rem;
   border-radius: .5rem;
+}
+
+.login__box img{
+  display: inline;
 }
 
 .login__icon{
@@ -136,6 +146,11 @@ img{
   color: var(--first-color-light);
 }
 
+.login__inputs::placeholder{
+  font-size: var(--normal-font-size);
+  font-family: var(--body-font);
+  color: var(--first-color-light);
+}
 .login__forgot{
   display: block;
   width: max-content;
@@ -148,18 +163,19 @@ img{
 
 .login__button{
   display: block;
-  padding: 1rem;
-  margin: 2rem 0;
+  padding: 1rem 8.5rem;
+  margin: 1rem 0;
   background-color: var(--first-color);
   color: #FFF;
   font-weight: 600;
-  text-align: center;
+  /* text-align: center; */
   border-radius: .5rem;
   transition: .3s;
 }
 
 .login__button:hover{
   background-color: var(--first-color-dark);
+  cursor: pointer;
 }
 
 .login__account, .login__signin, .login__signup{
@@ -176,7 +192,13 @@ img{
   cursor: pointer;
 }
 
-
+.verif{
+  margin-top: 10px;
+}
+.verif img {
+  display: inline;
+  margin-top: 10px;
+}
 
 /*Show login*/
 .block{
@@ -203,7 +225,7 @@ img{
   }
 
   .login__content{
-    grid-template-columns: repeat(2, max-content);
+    grid-template-columns: repeat(3, max-content);
     justify-content: center;
     align-items: center;
     margin-left: 10rem;
@@ -212,7 +234,7 @@ img{
   .login__img{
     display: flex;
     width: 600px;
-    height: 588px;
+    height: 600px;
     background-color: var(--first-color-lighten);
     border-radius: 1rem;
     padding-left: 1rem;
@@ -232,6 +254,6 @@ img{
   }
 
   .login__create{
-    bottom: -5.5rem;
+    bottom: -7.25rem;
   }
 }

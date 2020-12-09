@@ -266,6 +266,11 @@ a {
     margin-left: 1rem;
 }
 
+.nav__icon__lite {
+    font-size: 1rem;
+    padding: auto;
+}
+
 .nav__name {
     font-size: medium;
 }

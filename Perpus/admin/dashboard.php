@@ -22,7 +22,63 @@ include('includes/config.php'); ?>
 </head>
 
 <body id="body-pd">
-    <?php include('includes/navbar.php'); ?>
+    <header class="header" id="header">
+        <div class="header__toggle">
+            <i class="bx bx-menu" id="header-toggle"></i>
+        </div>
+
+        <div class="header__img">
+            <img src="assets/Img/profile.png" alt="">
+        </div>
+    </header>
+
+    <div class="l-navbar" id="nav-bar">
+        <nav class="nav">
+            <div>
+                <a href="dashboard.php" class="nav__logo">
+                    <i class='bx bxs-book-reader nav__logo-icon'></i>
+                    <span class="nav__logo-name">Perpustakaan</span>
+                </a>
+
+                <div class="nav__list">
+                    <a href="dashboard.php" class="nav__link active">
+                        <i class='bx bxs-dashboard nav__icon'></i>
+                        <span class="nav__name">Dashboard</span>
+                    </a>
+
+                    <a href="manajemen-kategori.php" class="nav__link">
+                        <i class='bx bxs-folder nav__icon'></i>
+                        <span class="nav__name">Kategori</span>
+                    </a>
+
+                    <a href="manajemen-buku.php" class="nav__link">
+                        <i class='bx bxs-book-alt nav__icon'></i>
+                        <span class="nav__name">Buku</span>
+                    </a>
+
+                    <a href="manajemen-peminjaman.php" class="nav__link">
+                        <i class='bx bxs-cart-add nav__icon'></i>
+                        <span class="nav__name">Peminjaman</span>
+                    </a>
+
+                    <a href="anggota.php" class="nav__link">
+                        <i class='bx bxs-user nav__icon'></i>
+                        <span class="nav__name">Anggota</span>
+                    </a>
+
+                    <a href="ganti-pass.php" class="nav__link">
+                        <i class='bx bxs-key nav__icon'></i>
+                        <span class="nav__name">Ganti Password</span>
+                    </a>
+                </div>
+            </div>
+
+            <a href="logout.php" class="nav__link">
+                <i class='bx bx-log-out nav__icon'></i>
+                <span class="nav__name">Log Out</span>
+            </a>
+        </nav>
+    </div>
 
     <div class="content-wrapper">
         <div class="container">
@@ -37,7 +93,7 @@ include('includes/config.php'); ?>
                     <div class="alert alert-success back-widget-set text-center">
                         <i class='bx bxs-book nav__icon'></i>
                         <?php
-                        $sql = "SELECT id from tblbooks ";
+                        $sql = "SELECT id_buku from buku ";
                         $query = $dbh->prepare($sql);
                         $query->execute();
                         $results = $query->fetchAll(PDO::FETCH_OBJ);
@@ -53,7 +109,7 @@ include('includes/config.php'); ?>
                     <div class="alert alert-info back-widget-set text-center">
                         <i class='bx bxs-cart-add nav__icon'></i>
                         <?php
-                        $sql1 = "SELECT id from tblissuedbookdetails ";
+                        $sql1 = "SELECT id_buku from peminjaman ";
                         $query1 = $dbh->prepare($sql1);
                         $query1->execute();
                         $results1 = $query1->fetchAll(PDO::FETCH_OBJ);
@@ -70,7 +126,7 @@ include('includes/config.php'); ?>
                         <i class='bx bx-recycle nav__icon'></i>
                         <?php
                         $status = 1;
-                        $sql2 = "SELECT id from tblissuedbookdetails where RetrunStatus=:status";
+                        $sql2 = "SELECT id_peminjaman from peminjaman where status=:status";
                         $query2 = $dbh->prepare($sql2);
                         $query2->bindParam(':status', $status, PDO::PARAM_STR);
                         $query2->execute();
@@ -89,7 +145,7 @@ include('includes/config.php'); ?>
                     <div class="alert alert-danger back-widget-set text-center">
                         <i class='bx bxs-user-circle nav__icon'></i>
                         <?php
-                        $sql3 = "SELECT id from tblstudents ";
+                        $sql3 = "SELECT id_siswa from siswa ";
                         $query3 = $dbh->prepare($sql1);
                         $query3->execute();
                         $results3 = $query3->fetchAll(PDO::FETCH_OBJ);
@@ -104,7 +160,7 @@ include('includes/config.php'); ?>
                     <div class="alert alert-info back-widget-set text-center">
                         <i class='bx bxs-folder-open nav__icon'></i>
                         <?php
-                        $sql5 = "SELECT id from tblcategory ";
+                        $sql5 = "SELECT id_kategori from kategori ";
                         $query5 = $dbh->prepare($sql1);
                         $query5->execute();
                         $results5 = $query5->fetchAll(PDO::FETCH_OBJ);
